@@ -125,9 +125,39 @@ Total: 3 unreferenced equation(s)
 - Assumes standard LaTeX syntax
 - Only detects standard numbered equation environments (not custom environments)
 
+## Tips for Better Detection
+
+### Using `cleveref` for Range References
+
+Instead of manually writing range references like `\eqref{eq:1}--\eqref{eq:5}` (which this tool cannot detect as referencing equations 2-4), use the `cleveref` package to automatically handle ranges:
+
+```latex
+\usepackage{amsmath}
+\usepackage[capitalize]{cleveref} % Load AFTER hyperref if you use it
+
+% Optional: Customize cleveref to look like \eqref
+\crefformat{equation}{(#2#1#3)}
+\crefrangeformat{equation}{(#3#1#4)–(#5#2#6)}
+```
+
+Then in your document:
+
+```latex
+% Instead of: See equations \eqref{eq:a}--\eqref{eq:d}
+% Use this:
+See \cref{eq:a,eq:b,eq:c,eq:d}
+```
+
+**Benefits:**
+- If consecutive: Automatically displays as "(1)–(4)"
+- If non-consecutive: Displays as "(1), (2), and (5)"
+- **This tool will correctly detect all referenced labels** since each is explicitly listed in `\cref{}`
+
 ## Notes
 
 - Starred environments (e.g., `equation*`) are correctly ignored as they don't produce numbers
+- The tool only detects explicit label references in `\ref`, `\eqref`, `\Cref`, etc. commands
+- Indirect references (e.g., "equations 1 through 5" as plain text) are not detected
 
 ## Contributing
 
